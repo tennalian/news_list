@@ -1,22 +1,30 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
-import Rss from './component';
+import {Router, Route, Link, browserHistory, IndexRoute } from 'react-router'
+import NewsListContainer from './NewsListContainer';
+import DetailContainer from './DetailContainer';
 import './styles.scss';
 
-
-const xhr = new XMLHttpRequest();
-xhr.open('GET', '/data.json', false);
-xhr.send();
-if (xhr.status != 200) {
-  console.log( xhr.status + ': ' + xhr.statusText );
-} else {
-  var initialData = JSON.parse(xhr.responseText);
+class App extends React.Component{
+	render(){
+        return(
+            <div className="news-list container">
+                <div className="row">
+                    {this.props.children}
+                </div>
+            </div>
+        )
+    }
 }
 
-// console.log(initialData.news);
-
-ReactDOM.render(<Rss data={initialData.news}/>,document. getElementById('app'));
-
-
+ReactDOM.render((
+	<Router history={browserHistory}>
+		<Route path="/" component={App} >
+			<IndexRoute component={NewsListContainer}/>
+			<Route path="/" component={NewsListContainer} />
+			<Route path="/detail/:newsId" component={DetailContainer} />
+		</Route>
+	</Router>
+), document.getElementById('app'))
 
 
